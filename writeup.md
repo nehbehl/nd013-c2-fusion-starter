@@ -27,6 +27,7 @@ Further we use the Open3D library to display the lidar point-cloud in a 3d viewe
 <img src="img/image5.png"/>
 
 
+Some of the clearly visible features include the chassis of the car, front bumper. In some cases the additional features include the headover lights, car front lights, rear window shields. These are identified through the intensity channels . The chassis of the car is the most prominent identifiable feature from the lidar perspective. The images are analysed with different settings and the rear lights are the major stable components, also the bounding boxes are correctly assigned to the cars 
 ### 2. Do you see any benefits in camera-lidar fusion compared to lidar-only tracking (in theory and in your concrete results)? 
 Camera lidar fusion definitely adds more clarity and information to lidar only tracking.
 
