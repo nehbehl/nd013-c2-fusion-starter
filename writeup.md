@@ -12,18 +12,18 @@ Finally we stack the range and intensity image vertically and visualize it.
 Further we use the Open3D library to display the lidar point-cloud in a 3d viewer in order to
  develop a feel for the nature of lidar point-clouds
 
-<img src="vehicle_image1.jpeg"/>
+<img src="vehicle_image1.jpg"/>
 
 
-<img src="vehicle_image2.jpeg"/>
+<img src="vehicle_image2.jpg"/>
 
 
-<img src="vehicle_image3.jpeg"/>
+<img src="vehicle_image3.jpg"/>
 
 
-<img src="vehicle_image4.jpeg"/>
+<img src="vehicle_image4.jpg"/>
 
-<img src="vehicle_image5.jpeg"/>
+<img src="vehicle_image5.jpg"/>
 
 
 ### 2. Do you see any benefits in camera-lidar fusion compared to lidar-only tracking (in theory and in your concrete results)? 
