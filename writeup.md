@@ -16,15 +16,15 @@ Further we use the Open3D library to display the lidar point-cloud in a 3d viewe
 <img src="img/image1.png"/>
 
 
-<img src="vehicle_image2.jpg"/>
+<img src="img/image2.png"/>
 
 
-<img src="vehicle_image3.jpg"/>
+<img src="img/image3.png"/>
 
 
-<img src="vehicle_image4.jpg"/>
+<img src="img/image4.png"/>
 
-<img src="vehicle_image5.jpg"/>
+<img src="img/image5.png"/>
 
 
 ### 2. Do you see any benefits in camera-lidar fusion compared to lidar-only tracking (in theory and in your concrete results)? 
