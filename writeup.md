@@ -28,19 +28,19 @@ Further we use the Open3D library to display the lidar point-cloud in a 3d viewe
 <img src="img/image5.png"/>
 
 
-<img src="img/image6.png"/>
+<img src="img6.png"/>
 
 
-<img src="img/image7.png"/>
+<img src="img7.png"/>
 
 
-<img src="img/image8.png"/>
+<img src="img8.png"/>
 
 
-<img src="img/image9.png"/>
+<img src="img9.png"/>
 
 
-<img src="img/image10.png"/>
+<img src="img10.png"/>
 
 
 
