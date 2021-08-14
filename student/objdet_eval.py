@@ -13,7 +13,7 @@
 # general package imports
 import numpy as np
 import matplotlib
-matplotlib.use('wxagg') # change backend so that figure maximizing works on Mac as well     
+#matplotlib.use('wxagg') # change backend so that figure maximizing works on Mac as well     
 import matplotlib.pyplot as plt
 
 import torch
@@ -49,17 +49,25 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
             print("student task ID_S4_EX1 ")
 
             ## step 1 : extract the four corners of the current label bounding-box
-            
+            b1 = tools.compute_box_corners(label.box.center_x, label.box.center_y, label.box.width, label.box.length, box.heading)
             ## step 2 : loop over all detected objects
-
+            for object_found in detections:
                 ## step 3 : extract the four corners of the current detection
-                
+                _id, x, y,z, _h, w, l, yaw = object_found
+                b2 = tools.compute_box_corners(x, y, w, l, yaw)
                 ## step 4 : computer the center distance between label and detection bounding-box in x, y, and z
-                
+                distancex = np.array(label.box.center_x - x).item()
+                distancey = np.array(label.box.center_y - y).item()
+                distancez = np.array(label.box.center_z - z).item()
                 ## step 5 : compute the intersection over union (IOU) between label and detection bounding-box
-                
+                poly1 = Polygon(b1)
+                poly2 = Polygon(b2)
+                intersection = poly1.intersection(poly2).area 
+                union = poly1.union(poly2).area
+                iou = intersection / union
                 ## step 6 : if IOU exceeds min_iou threshold, store [iou,dist_x, dist_y, dist_z] in matches_lab_det and increase the TP count
-                
+                if min_iou < iou:
+                    matches_lab_det.append([iou,distancex, distancey, distancez ])
             #######
             ####### ID_S4_EX1 END #######     
             
@@ -77,14 +85,15 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
     # compute positives and negatives for precision/recall
     
     ## step 1 : compute the total number of positives present in the scene
-    all_positives = 0
+    all_positives = labels_valid.sum()
 
     ## step 2 : compute the number of false negatives
     false_negatives = 0
+    false_negatives = all_positives - len(iou)
 
     ## step 3 : compute the number of false positives
     false_positives = 0
-    
+    false_positives = len(detections) - len(iou)
     #######
     ####### ID_S4_EX2 END #######     
     
@@ -111,12 +120,18 @@ def compute_performance_stats(det_performance_all):
     print('student task ID_S4_EX3')
 
     ## step 1 : extract the total number of positives, true positives, false negatives and false positives
-    
+    positives = sum(pos_negs[:,0])
+    true_positives = sum(pos_negs[:,1])
+    false_negatives = sum(pos_negs[:,2])
+    false_positives = sum(pos_negs[:,3])
+
     ## step 2 : compute precision
     precision = 0.0
+    precision = true_positives / (true_positives + false_positives) # When an object is detected, what are the chances of it being real?   
 
     ## step 3 : compute recall 
     recall = 0.0
+    recall = true_positives / (true_positives + false_negatives) # What are the chances of a real object being detected?
 
     #######    
     ####### ID_S4_EX3 END #######     
