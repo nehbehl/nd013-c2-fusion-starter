@@ -13,7 +13,7 @@ Further we use the Open3D library to display the lidar point-cloud in a 3d viewe
  develop a feel for the nature of lidar point-clouds
 
 
-<img src="img/img_title_2_new.png"/>
+<img src="img/vehicle_image1"/>
 
 
 <img src="vehicle_image2.jpg"/>
