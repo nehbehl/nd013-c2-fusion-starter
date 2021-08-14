@@ -24,10 +24,27 @@ Further we use the Open3D library to display the lidar point-cloud in a 3d viewe
 
 <img src="img/image4.png"/>
 
+
 <img src="img/image5.png"/>
 
 
-Some of the clearly visible features include the chassis of the car, front bumper. In some cases the additional features include the car windows, car lights, roof carriers, headlights, tail lights etc.
+<img src="img/image6.png"/>
+
+
+<img src="img/image7.png"/>
+
+
+<img src="img/image8.png"/>
+
+
+<img src="img/image9.png"/>
+
+
+<img src="img/image10.png"/>
+
+
+
+Some of the clearly visible features include the chassis of the car, front bumper. In some cases the additional features include the car windows, car lights, roof carriers, headlights, tail lights, car tyres etc. Some of the images showing cars that are far off show poor visibility of smaller sized features like tyres or side windows though chassis is still visible to some extent.
 
 ### 2. Do you see any benefits in camera-lidar fusion compared to lidar-only tracking (in theory and in your concrete results)? 
 Camera lidar fusion definitely adds more clarity and information to lidar only tracking.
