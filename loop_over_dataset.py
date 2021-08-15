@@ -49,16 +49,16 @@ import misc.params as params
 ## Set parameters and perform initializations
 
 ## Select Waymo Open Dataset file and frame numbers
-#data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord' # Sequence 1
+data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord' # Sequence 1
 # data_filename = 'training_segment-10072231702153043603_5725_000_5745_000_with_camera_labels.tfrecord' # Sequence 2
-data_filename = 'training_segment-10963653239323173269_1924_000_1944_000_with_camera_labels.tfrecord' # Sequence 3
-show_only_frames = [0,200] # show only frames in interval for debugging
+#data_filename = 'training_segment-10963653239323173269_1924_000_1944_000_with_camera_labels.tfrecord' # Sequence 3
+show_only_frames = [50,51] # show only frames in interval for debugging
 
 ## Prepare Waymo Open Dataset file for loading
 data_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dataset', data_filename) # adjustable path in case this script is called from another working directory
-model = "darknet"
-#model="fpn_resnet"
-sequence = "3"
+#model = "darknet"
+model="fpn_resnet"
+sequence = "1"
 results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_' + model)
 #results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results',model)
 
@@ -66,11 +66,12 @@ datafile = WaymoDataFileReader(data_fullpath)
 datafile_iter = iter(datafile)  # initialize dataset iterator
 
 ## Initialize object detection
-configs_det = det.load_configs(model_name='darknet') # options are 'darknet', 'fpn_resnet'
+configs_det = det.load_configs(model) # options are 'darknet', 'fpn_resnet'
 model_det = det.create_model(configs_det)
 
-configs_det.use_labels_as_objects = False # True = use groundtruth labels as objects, False = use model-based detection
-
+configs_det.use_labels_as_objects = True # True = use groundtruth labels as objects, False = use model-based detection
+configs_det.save_results = False
+                               
 ## Uncomment this setting to restrict the y-range in the final project
 #configs_det.lim_y = [-25, 25] 
 
@@ -90,9 +91,9 @@ np.random.seed(10) # make random values predictable
 #exec_visualization = ['show_range_image'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
 
 #student task ID_S1_EX2
-exec_detection = []
-exec_tracking = [] 
-exec_visualization = ['show_pcl']
+#exec_detection = []
+#exec_tracking = [] 
+#exec_visualization = ['show_pcl']
 
 #student task ID_S2_EX1
 #exec_data = ['pcl_from_rangeimage']
@@ -106,12 +107,19 @@ exec_visualization = ['show_pcl']
 #exec_tracking = []
 #exec_visualization = []
 
+
 #student task ID_S3_EX1
 #exec_data = ['pcl_from_rangeimage', 'load_image']
 #exec_detection = ['bev_from_pcl', 'detect_objects']
 #exec_tracking = []
 #exec_visualization = ['show_objects_in_bev_labels_in_camera']
 #configs_det = det.load_configs(model_name="fpn_resnet")
+exec_data = ['pcl_from_rangeimage', 'load_image']
+exec_detection = ['bev_from_pcl', 'detect_objects']
+exec_tracking = []
+exec_visualization = ['show_objects_in_bev_labels_in_camera']
+configs_det = det.load_configs(model_name="fpn_resnet")
+
 
 #student task ID_S4_EX1
 #exec_data = ['pcl_from_rangeimage']
@@ -185,7 +193,8 @@ while True:
                 detections = det.detect_objects(lidar_bev, model_det, configs_det)
             else:
                 print('loading detected objects from result file')
-                detections = load_object_from_file(results_fullpath, data_filename, 'detections_' + configs_det.arch + '_' + str(configs_det.conf_thresh), cnt_frame)
+                detections = load_object_from_file(results_fullpath, data_filename, 'detections', cnt_frame)
+                #detections = load_object_from_file(results_fullpath, data_filename, 'detections_' + configs_det.arch + '_' + str(configs_det.conf_thresh), cnt_frame)
 
         ## Validate object labels
         if 'validate_object_labels' in exec_list:
