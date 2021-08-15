@@ -29,7 +29,7 @@ from tools.objdet_models.resnet.utils.evaluation_utils import decode, post_proce
 from tools.objdet_models.darknet.models.darknet2pytorch import Darknet as darknet
 from tools.objdet_models.darknet.utils.evaluation_utils import post_processing_v2
 
-
+from tools.objdet_models.resnet.utils.torch_utils import _sigmoid
 # load model-related parameters into an edict
 def load_configs_model(model_name='darknet', configs=None):
 
@@ -56,7 +56,7 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.num_workers = 4
         configs.pin_memory = True
         configs.use_giou_loss = False
-
+        configs.min_iou = 0.5
     elif model_name == 'fpn_resnet':
         ####### ID_S3_EX1-3 START #######     
         #######
@@ -88,6 +88,7 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.num_z = 1
         configs.num_dim = 3
         configs.num_direction = 2
+        configs.conf_thresh = 0.5
         configs.heads = {
         'hm_cen': configs.num_classes,
         'cen_offset': configs.num_center_offset,
@@ -96,6 +97,11 @@ def load_configs_model(model_name='darknet', configs=None):
         'dim': configs.num_dim
         }
         configs.num_input_features = 4
+        
+        
+        configs.model_path = os.path.join(parent_path, 'tools', 'objdet_models', 'resnet')
+        configs.pretrained_filename = os.path.join(configs.model_path, 'pretrained', 'fpn_resnet_18_epoch_300.pth')
+
         #######
         ####### ID_S3_EX1-3 END #######     
 
@@ -152,7 +158,7 @@ def create_model(configs):
         ####### ID_S3_EX1-4 START #######     
         #######
         print("student task ID_S3_EX1-4")
-        num_layers = 20
+        num_layers = 18
         model = fpn_resnet.get_pose_net(num_layers = num_layers, heads = configs.heads, 
                                         head_conv= configs.head_conv, 
                                         imagenet_pretrained = configs.imagenet_pretrained)
@@ -205,12 +211,15 @@ def detect_objects(input_bev_maps, model, configs):
             #######
             print("student task ID_S3_EX1-5")
 
+            outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
+            outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
                       # detections size (batch_size, K, 10)
             detections = decode(outputs['hm_cen'], outputs['cen_offset'], outputs['direction'], outputs['z_coor'],
                                 outputs['dim'], K=configs.K)
             detections = detections.cpu().numpy().astype(np.float32)
             detections = post_processing(detections, configs.num_classes, configs.down_ratio, configs.peak_thresh)  
-            detections = detections[0]
+            detections = detections[0][1]
+            print(detections)
             #######
             ####### ID_S3_EX1-5 END #######     
 
