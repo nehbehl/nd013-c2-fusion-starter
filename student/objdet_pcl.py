@@ -15,6 +15,7 @@ import cv2
 import numpy as np
 import torch
 import open3d as o3d
+from numpy.lib.function_base import percentile
 import zlib
 # add project directory to python path to enable relative imports
 import os
@@ -150,8 +151,10 @@ def bev_from_pcl(lidar_pcl, configs):
     intensity_map = np.zeros((configs.bev_height, configs.bev_width))
    
     # step 2 : re-arrange elements in lidar_pcl_cpy by sorting first by x, then y, then -z (use numpy.lexsort)
-    idx_height = np.lexsort((-lidar_pcl_cpy[:, 2], lidar_pcl_cpy[:, 1], lidar_pcl_cpy[:, 0]))
-    lidar_pcl_top = lidar_pcl_cpy[idx_height]
+    lidar_pcl_cpy[lidar_pcl_cpy[:,3]>1.0,3] = 1.0
+    idx_intensity = np.lexsort((-lidar_pcl_cpy[:, 2], lidar_pcl_cpy[:, 1], lidar_pcl_cpy[:, 0]))
+    lidar_pcl_top = lidar_pcl_cpy[idx_intensity]
+   
     ## step 3 : extract all points with identical x and y such that only the top-most z-coordinate is kept (use numpy.unique)
     ##          also, store the number of points per x,y-cell in a variable named "counts" for use in the next task
     lidar_pcl_int, indices, count = np.unique(lidar_pcl_cpy[:, 0:2], axis=0, return_index=True, return_counts=True)
